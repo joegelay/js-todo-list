@@ -1,3 +1,4 @@
+//document query selectors
 const listsContainer = document.querySelector('[data-lists]')
 const newListForm = document.querySelector('[data-new-list-form]')
 const newListInput = document.querySelector('[data-new-list-input]')
@@ -11,11 +12,14 @@ const newTaskForm = document.querySelector('[data-new-task-form]')
 const newTaskInput = document.querySelector('[data-new-task-input]')
 const clearCompleteTasksButton = document.querySelector('[data-clear-complete-tasks-button]')
 
+// localstorage variables
 const LOCAL_STORAGE_LIST_KEY = 'task.lists';
 const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId';
+// on page load, lists is either taken from local storage, or is an empty array
 let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
 
+// switch selected list
 listsContainer.addEventListener('click', e => {
     if (e.target.tagName.toLowerCase() === 'li') {
         selectedListId = e.target.dataset.listId
@@ -24,17 +28,23 @@ listsContainer.addEventListener('click', e => {
 
 })
 
+// add click event listener to task list
 tasksContainer.addEventListener('click', e => {
     if (e.target.tagName.toLowerCase() === 'input') {
+        // make selectedList the list whose id matches the selected list id
         const selectedList = lists.find(list => list.id === selectedListId)
+        // make selectedTask the task whose id matches the selected task
         const selectedTask = selectedList.tasks.find(task => task.id === e.target.id)
         selectedTask.complete = e.target.checked
+        
         save();
         renderTaskCount(selectedList);
     }
 })
 
+
 clearCompleteTasksButton.addEventListener('click', e => {
+    // out of all lists, find the list id that matches the selected list id
     const selectedList = lists.find(list => list.id === selectedListId)
     selectedList.tasks = selectedList.tasks.filter(task => !task.complete)
     saveAndRender();
@@ -61,7 +71,7 @@ newTaskForm.addEventListener('submit', e => {
     e.preventDefault();
     const taskName = newTaskInput.value
     if (taskName == null || taskName === '') return
-    const task = createList(taskName)
+    const task = createTask(taskName)
     newTaskInput.value = null
     const selectedList = lists.find(list => list.id === selectedListId)
     selectedList.tasks.push(task)
@@ -80,12 +90,15 @@ function createTask(name) {
     return {
         id: Date.now().toString(),
         name: name,
-        complete: false
+        complete: false,
+        priority: false
     }
 }
 
 function save() {
+    // tell localStorage to set tasks.lists as key, value as array of lists
     localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists))
+    // tell localStorage to set task.selectedListID as key, value as selectedListID
     localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
 }
 
@@ -132,6 +145,7 @@ function renderTasks(selectedList) {
 
 function renderTaskCount(selectedList) {
     const incompleteTaskCount = selectedList.tasks.filter(task => !task.complete).length
+    // if incompleteTask Count is 1, then write Task, otherwise write Tasks
     const taskString = incompleteTaskCount === 1 ? "task" : "tasks"
     listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
 }
@@ -147,4 +161,5 @@ function clearElement(element) {
     }
 };
 
+//render page on startup
 render();

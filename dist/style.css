@@ -94,7 +94,6 @@ form {
     font-size: inherit;
     outline: none;
     padding: 0.25em;
-
     transition: border-bottom 150ms ease-in;
     order: 2;
 }
@@ -169,7 +168,6 @@ form {
     display: inline-flex;
     align-items: center;
     position: relative;
-    
     cursor: pointer;
 
 }
@@ -250,6 +248,23 @@ form {
     padding-top: 10px;
     
 }
+
+.priority-button {
+    float: right;
+    margin-top: 5px;
+    color:red;
+    background-color: white;
+    cursor: pointer;
+    transition: transform 150ms ease-in-out;
+    
+}
+
+.priority-button:hover {
+    color:white;
+    background-color: red;
+    transform: scale(1.2);
+}
+
 
 
 
