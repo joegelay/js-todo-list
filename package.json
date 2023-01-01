@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/joegelay/js-todo-list#readme",
   "devDependencies": {
-    "webpack": "^4.41.2"
+    "webpack": "^5.75.0"
   }
 }
